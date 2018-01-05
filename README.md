@@ -1,4 +1,6 @@
-#Top level directory for managing all my projects.
+#Projects
+
+Top level directory for managing all my projects.
 
 There should be no folders in here, just scripts.
 
