@@ -1,5 +1,9 @@
 #!/bin/bash
 
+## Top level dir
+TOPDIR=`pwd`
+
+
 ## First check the arguments list
 ATTEN_ONLY=true
 AA=$1
@@ -9,6 +13,27 @@ if [ "$AA" == "-a" ]; then
   ATTEN_ONLY=false
 fi
 
+############################################################################
+############################################################################
+############################################################################
+## Get list of top level dirs and private dirs
+#https://stackoverflow.com/questions/4494336/how-do-you-store-a-list-of-directories-into-an-array-in-bash-and-then-print-the
+
+declare -a GITDIRS
+count=0
+#result=${PWD##*/}
+for dir in */ ; do
+  GITDIRS[${count}]=${dir}
+  count=$((count+1))
+
+  cd ${dir}
+  if [ -d *Private ] ; then
+    # Remove slash at the end of dir
+    GITDIRS[${count}]="${dir}${dir%/}Private/"
+    count=$((count+1))
+  fi
+  cd ${TOPDIR}
+done
 
 ############################################################################
 ############################################################################
@@ -21,8 +46,9 @@ ATTENTIONNDIR=0;
 NOGITNDIR=0;
 NOREMOTENDIR=0;
 
-for d in */ ; do
-cd ${d}
+for dir in "${GITDIRS[@]}" ; do
+
+cd ${dir}
 
 VAR=""
 if [ -d ".git" ]; then
@@ -40,7 +66,7 @@ then
   # 31 is red
   #1 is bold
   #21 resets the bold
-  echo -e "\e[1;31m$d"
+  echo -e "\e[1;31m$dir"
   echo -e "\e[21;31mNot a git repo"
 
   NOGITNDIR=$((NOGITNDIR+1))
@@ -53,7 +79,7 @@ then
   # 31 is red
   #1 is bold
   #21 resets the bold
-  echo -e "\e[1;31m$d"
+  echo -e "\e[1;31m$dir"
   echo -e "\e[21;31mRemote not set"
 
   NOREMOTENDIR=$((NOREMOTENDIR+1))
@@ -68,7 +94,7 @@ then
   # 33 is yellow
   #1 is bold
   #21 resets the bold
-  echo -e "\e[1;33m$d"
+  echo -e "\e[1;33m$dir"
   echo -e "\e[21;33m${VAR}"
 
   TOPUSHNDIR=$((TOPUSHNDIR+1))
@@ -86,7 +112,7 @@ then
     # 32 is green
     #1 is bold
     #21 resets the bold
-    echo -e "\e[1;32m$d"
+    echo -e "\e[1;32m$dir"
     echo -e "\e[21;32m${VAR}"
   fi
 
@@ -100,14 +126,14 @@ else
   # 31 is red
   #1 is bold
   #21 resets the bold
-  echo -e "\e[1;31m$d"
+  echo -e "\e[1;31m$dir"
   echo -e "\e[21;31m${VAR}"
 
   ATTENTIONNDIR=$((ATTENTIONNDIR+1))
 fi
 
 TOTALNDIR=$((TOTALNDIR+1))
-cd ..
+cd ${TOPDIR}
 done
 
 ############################################################################

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./update_gitlinks.sh
+./update_gitremotes.sh
 git add -A
 git commit -m "Auto msg: updated GITREMOTES"
 git push -u origin master
@@ -14,6 +14,12 @@ while IFS= read -r line; do
   then
     cd ${folder}
     git push -u origin master
+    if [ -d *Private ]; then
+      cd *Private
+      git push -u origin master
+      cd ..
+    fi
+
     cd ..
   else
     # 31 is red
