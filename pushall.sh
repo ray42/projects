@@ -2,7 +2,7 @@
 
 ./update_gitremotes.sh
 git add -A
-git commit -m "Auto msg: updated GITREMOTES"
+git commit -m "Auto msg: updated GITREMOTES.ray"
 git push -u origin master
 
 while IFS= read -r line; do 
@@ -32,5 +32,5 @@ while IFS= read -r line; do
   fi
   
   #printf '%s\n' "${tmp%.git}"
-done < GITREMOTES
+done < GITREMOTES.ray
 

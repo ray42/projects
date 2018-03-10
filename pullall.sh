@@ -39,5 +39,5 @@ while IFS= read -r line; do
   fi
   
   #printf '%s\n' "${tmp%.git}"
-done < GITREMOTES
+done < GITREMOTES.ray
 
